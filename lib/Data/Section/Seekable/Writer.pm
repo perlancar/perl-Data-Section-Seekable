@@ -35,8 +35,8 @@ sub add_part {
 
     die "Duplicate part name '$name'" if $self->{_part_names}{$name}++;
 
-    if (keys %{$self->{_part_names}} > 1) {
-        $self->{_content} .= $self->{_separator};
+    if (keys(%{$self->{_part_names}}) > 1 && length($self->{separator})) {
+        $self->{_content} .= $self->{separator};
     }
     push @{ $self->{_toc} }, [
         $name,
@@ -44,6 +44,7 @@ sub add_part {
         length($content),
         $extra,
     ];
+    $self->{_content} .= $content;
 }
 
 sub as_string {
@@ -51,10 +52,12 @@ sub as_string {
 
     die "You must first add one or more parts" unless @{ $self->{_toc} };
 
+    use DD; dd $self;
+
     join(
         "",
         "Data::Section::Seekable v1\n",
-        (map {"$_[0],$_[1],$_[2]".(defined($_[3]) ? ",$_[3]":"")}
+        (map {"$_->[0],$_->[1],$_->[2]".(defined($_->[3]) ? ",$_->[3]":"")."\n"}
              @{ $self->{_toc} }),
         "\n",
         $self->{_content},
