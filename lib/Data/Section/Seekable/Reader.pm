@@ -27,7 +27,7 @@ sub new {
             or die "Unexpected end of data section while reading header line";
         chomp($header_line);
         $header_line eq 'Data::Section::Seekable v1'
-            or die "Invalid header, must be 'Data::Section::Seekable v1'";
+            or die "Invalid header, must be 'Data::Section::Seekable v1' (got: $header_line)";
 
         my %toc;
         my $i = 0;
@@ -36,9 +36,10 @@ sub new {
             my $toc_line = <$fh>;
             defined($toc_line)
                 or die "Unexpected end of data section while reading TOC line #$i";
+            chomp($toc_line);
             $toc_line =~ /\S/ or last;
             $toc_line =~ /^([^,]+),(\d+),(\d+)$/
-                or die "Invalid TOC line #$i in data section";
+                or die "Invalid TOC line #$i in data section: $toc_line";
             $toc{$1} = [$2, $3];
         }
         my $pos = tell $fh;
