@@ -27,6 +27,12 @@ sub empty {
     $self->{_part_names} = {};
 }
 
+sub separator {
+    my $self = shift;
+    $self->{separator} = $_[0] if @_;
+    $self->{separator};
+}
+
 sub add_part {
     my ($self, $name, $content, $extra) = @_;
     die "Name cannot be empty" unless length($name);

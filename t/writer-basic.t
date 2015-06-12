@@ -30,9 +30,13 @@ _
 
 {
     my $writer = Data::Section::Seekable::Writer->new(separator=>"==\n");
+    is($writer->separator, "==\n", "separator 1");
     $writer->add_part(part1 => "This is part1\n");
     $writer->add_part(part2 => "This is part\ntwo\n", "extra");
+    $writer->separator(">>\n");
+    is($writer->separator, ">>\n", "separator 2");
     $writer->add_part(part3 => "");
+    dies_ok { $writer->add_part("part4\n" => "") } "part name cannot contain newline";
     dies_ok { $writer->add_part(part4 => "", "extra\n") } "extra cannot contain newline";
 
     is($writer->as_string, <<'_');
@@ -45,7 +49,7 @@ This is part1
 ==
 This is part
 two
-==
+>>
 _
 }
 
