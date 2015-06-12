@@ -15,44 +15,49 @@ sub new {
     my $class = shift;
 
     my $self = bless {@_}, $class;
-    $self->{_parts} = {};
+    $self->empty;
     $self->{separator} //= '';
     $self;
 }
 
+sub empty {
+    my $self = shift;
+    $self->{_toc} = [];
+    $self->{_content} = '';
+    $self->{_part_names} = {};
+}
+
 sub add_part {
-    my ($self, $name, $part_content, $extra) = @_;
+    my ($self, $name, $content, $extra) = @_;
     die "Name cannot be empty" unless length($name);
-    die "Name cannot contain comma" if $name =~ /,/;
+    die "Name cannot contain comma/newline" if $name =~ /,|\R/;
     die "Extra cannot contain newline" if defined($extra) && $extra =~ /\R/;
-    $self->{_parts}{$name} = [$part_content, $extra];
+
+    die "Duplicate part name '$name'" if $self->{_part_names}{$name}++;
+
+    if (keys %{$self->{_part_names}} > 1) {
+        $self->{_content} .= $self->{_separator};
+    }
+    push @{ $self->{_toc} }, [
+        $name,
+        length($self->{_content}),
+        length($content),
+        $extra,
+    ];
 }
 
 sub as_string {
     my $self = shift;
 
-    my @names = sort keys %{$self->{_parts}};
-    my @toc;
-    my $content;
-    my $offset = 0;
-    for my $name (@names) {
-        if (@toc && length($self->{separator})) {
-            $content .= $self->{separator};
-            $offset += length($self->{separator});
-        }
-        my ($part_content, $extra) = @{ $self->{_parts}{$name} };
-        push @toc, "$name,$offset," . length($part_content) .
-            (defined($extra) ? ",$extra" : "") . "\n";
-        $content .= $part_content;
-        $offset += length($part_content);
-    }
+    die "You must first add one or more parts" unless @{ $self->{_toc} };
 
     join(
         "",
         "Data::Section::Seekable v1\n",
-        @toc,
+        (map {"$_[0],$_[1],$_[2]".(defined($_[3]) ? ",$_[3]":"")}
+             @{ $self->{_toc} }),
         "\n",
-        $content,
+        $self->{_content},
     );
 }
 
