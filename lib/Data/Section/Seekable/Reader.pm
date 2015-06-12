@@ -92,9 +92,11 @@ In your script:
 
  my $p2 = $reader->read_part('part2'); # -> "This is part\ntwo\n"
  my $p1 = $reader->read_part('part1'); # -> "This is part1\n"
- my $p3 = $reader->read_part('part3'); # dies
+ my $p3 = $reader->read_part('part3'); # dies, unknown part
+
  my $e1 = $reader->read_extra('part1'); # -> undef
- my $e1 = $reader->read_extra('part2'); # -> "important"
+ my $e2 = $reader->read_extra('part2'); # -> "important"
+ my $e3 = $reader->read_extra('part3'); # dies, unknown part
 
  __DATA__
  Data::Section::Seekable v1
@@ -137,12 +139,12 @@ Return list of all known parts in the data section, sorted lexicographically.
 
 =head2 $reader->read_part($name) => str
 
-Read a part named C<$name>. Will die if part is unknown.
+Read the content of a part named C<$name>. Will die if part is unknown.
 
 =head2 $reader->read_extra($name) => str
 
-Read extra information (the fourth field of TOC line) for part named C<$name>.
-Will die if part is unknown.
+Read the extra information field (the fourth field of TOC line) of a part named
+C<$name>. Will die if part is unknown.
 
 
 =head1 SEE ALSO

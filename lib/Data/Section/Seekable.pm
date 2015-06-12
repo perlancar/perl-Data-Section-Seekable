@@ -41,7 +41,7 @@ Example:
 
  Data::Section::Seekable v1
  part1,0,14
- part2,14,17
+ part2,14,17,very,important
 
  This is part1
  This is part
