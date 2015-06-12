@@ -17,7 +17,7 @@ is($reader->read_part('part2'), "This is part\ntwo\n", "part2 content");
 dies_ok { $reader->read_part('part3') } "attempt to read unknown part -> dies";
 
 is_deeply($reader->read_extra('part1'), undef, "part1 extra");
-is($reader->read_extra('part2'), "extra", "part2 extra");
+is($reader->read_extra('part2'), "extra,info", "part2 extra");
 dies_ok { $reader->read_extra('part3') } "attempt to read extra for unknown part -> dies";
 
 is_deeply([$reader->parts()], ["part1","part2"], "parts()");
@@ -69,7 +69,7 @@ done_testing;
 __DATA__
 Data::Section::Seekable v1
 part1,0,14
-part2,14,17,extra
+part2,14,17,extra,info
 
 This is part1
 This is part
