@@ -1,5 +1,12 @@
 Revision history for Data-Section-Seekable
 
+0.02    2015-06-12 (PERLANCAR)
+
+	- No functional changes.
+
+	- Add more tests.
+
+
 0.01    2015-06-12 (PERLANCAR)
 
 	- First release.
