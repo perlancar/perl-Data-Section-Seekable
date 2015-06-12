@@ -58,8 +58,6 @@ sub as_string {
 
     die "You must first add one or more parts" unless @{ $self->{_toc} };
 
-    use DD; dd $self;
-
     join(
         "",
         "Data::Section::Seekable v1\n",
@@ -118,6 +116,21 @@ Constructor. Attributes:
 =head2 $writer->add_part($name => $content)
 
 =head2 $writer->as_string => str
+
+Get the final data section as string. You can also use the object as a string,
+e.g.:
+
+ print $writer;
+
+because this method is used for stringification overloading.
+
+=head2 $writer->separator([ $val ]) => str
+
+Get/set separator.
+
+=head2 $writer->empty
+
+Empty content.
 
 
 =head1 SEE ALSO

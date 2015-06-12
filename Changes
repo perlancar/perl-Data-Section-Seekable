@@ -1,5 +1,16 @@
 Revision history for Data-Section-Seekable
 
+0.04    2015-06-12 (PERLANCAR)
+
+        - Writer: add separator() accessor.
+
+        - Writer: add empty().
+
+        - Writer: now builds data section as you add_part(), this allows
+          changing separator in the middle (e.g. if you want to mark each part
+          with a separator that indicates its name).
+
+
 0.03    2015-06-12 (PERLANCAR)
 
         - Format tweak: allow adding extra information (metadata/whatever) to
