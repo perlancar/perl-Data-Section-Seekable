@@ -1,5 +1,15 @@
 Revision history for Data-Section-Seekable
 
+0.03    2015-06-12 (PERLANCAR)
+
+        - Format tweak: allow adding extra information (metadata/whatever) to
+          each part in TOC (the fourth field).
+
+        - Writer: add_part() accepts optional extra information as 3rd argument.
+
+        - Reader: Add read_extra() method.
+
+
 0.02    2015-06-12 (PERLANCAR)
 
 	- No functional changes.
