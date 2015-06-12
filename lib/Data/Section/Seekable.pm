@@ -26,13 +26,14 @@ First line of data section is the header line and must be:
  Data::Section::Seekable v1
 
 After the header line, comes one or more TOC ("table of content") lines. Each
-TOC line must match:
+TOC line must match this Perl regex:
 
- ([^,]+),(\d+),(\d+)
+ /^([^,]+), (\d+), (\d+) (?:, (.*))?/x
 
 The first field is the name, the second field is the offset, the third field is
 the length. Offset starts from 0 and the zero is counted from after the blank
-line after the last TOC line.
+line after the last TOC line. The fourth field is to store extra information, it
+is optional and can contain zero or more non-newline characters.
 
 After the last TOC line is a blank line. And after that is content.
 

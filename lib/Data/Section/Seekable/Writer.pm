@@ -21,10 +21,11 @@ sub new {
 }
 
 sub add_part {
-    my ($self, $name, $part_content) = @_;
+    my ($self, $name, $part_content, $extra) = @_;
     die "Name cannot be empty" unless length($name);
     die "Name cannot contain comma" if $name =~ /,/;
-    $self->{_parts}{$name} = $part_content;
+    die "Extra cannot contain newline" if defined($extra) && $extra =~ /\R/;
+    $self->{_parts}{$name} = [$part_content, $extra];
 }
 
 sub as_string {
@@ -39,9 +40,11 @@ sub as_string {
             $content .= $self->{separator};
             $offset += length($self->{separator});
         }
-        push @toc, "$name,$offset," . length($self->{_parts}{$name}) . "\n";
-        $content .= $self->{_parts}{$name};
-        $offset += length($self->{_parts}{$name});
+        my ($part_content, $extra) = @{ $self->{_parts}{$name} };
+        push @toc, "$name,$offset," . length($part_content) .
+            (defined($extra) ? ",$extra" : "") . "\n";
+        $content .= $part_content;
+        $offset += length($part_content);
     }
 
     join(

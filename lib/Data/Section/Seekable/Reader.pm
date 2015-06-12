@@ -38,9 +38,9 @@ sub new {
                 or die "Unexpected end of data section while reading TOC line #$i";
             chomp($toc_line);
             $toc_line =~ /\S/ or last;
-            $toc_line =~ /^([^,]+),(\d+),(\d+)$/
+            $toc_line =~ /^([^,]+),(\d+),(\d+)(?:,(.*))?$/
                 or die "Invalid TOC line #$i in data section: $toc_line";
-            $toc{$1} = [$2, $3];
+            $toc{$1} = [$2, $3, $4];
         }
         my $pos = tell $fh;
         $toc{$_}[0] += $pos for keys %toc;
@@ -70,6 +70,15 @@ sub read_part {
     $content;
 }
 
+sub read_extra {
+    my ($self, $name) = @_;
+
+    defined($self->{_toc}{$name})
+        or die "Unknown part '$name'";
+
+    $self->{_toc}{$name}[2];
+}
+
 1;
 # ABSTRACT: Read parts from data section
 
@@ -83,11 +92,14 @@ In your script:
 
  my $p2 = $reader->read_part('part2'); # -> "This is part\ntwo\n"
  my $p1 = $reader->read_part('part1'); # -> "This is part1\n"
+ my $p3 = $reader->read_part('part3'); # dies
+ my $e1 = $reader->read_extra('part1'); # -> undef
+ my $e1 = $reader->read_extra('part2'); # -> "important"
 
  __DATA__
  Data::Section::Seekable v1
  part1,0,14
- part2,14,17
+ part2,14,17,important
 
  This is part1
  This is part
@@ -126,6 +138,11 @@ Return list of all known parts in the data section, sorted lexicographically.
 =head2 $reader->read_part($name) => str
 
 Read a part named C<$name>. Will die if part is unknown.
+
+=head2 $reader->read_extra($name) => str
+
+Read extra information (the fourth field of TOC line) for part named C<$name>.
+Will die if part is unknown.
 
 
 =head1 SEE ALSO
