@@ -1,5 +1,12 @@
 Revision history for Data-Section-Seekable
 
+0.05    2015-06-12 (PERLANCAR)
+
+	- No functional changes.
+
+	- Tweak tests and examples in POD.
+
+
 0.04    2015-06-12 (PERLANCAR)
 
         - Writer: add separator() accessor.
