@@ -4,6 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
+use File::Temp qw(tempfile);
 use Test::Exception;
 use Test::More 0.98;
 
@@ -13,6 +14,50 @@ my $reader = Data::Section::Seekable::Reader->new;
 is($reader->read_part('part1'), "This is part1\n", "part1 content");
 is($reader->read_part('part2'), "This is part\ntwo\n", "part2 content");
 dies_ok { $reader->read_part('part3') } "attempt to read unknown part -> dies";
+
+is_deeply([$reader->parts()], ["part1","part2"], "parts()");
+
+{
+    my ($fh, $filename) = tempfile();
+    print $fh "Data::Section::Seekable v1\nfoo,0,1\n\nx";
+    close $fh; open $fh, "<", $filename;
+    my $reader = Data::Section::Seekable::Reader->new(handle=>$fh);
+    is($reader->read_part('foo'), 'x');
+}
+
+{
+    my ($fh, $filename) = tempfile();
+    close $fh; open $fh, "<", $filename;
+    dies_ok { Data::Section::Seekable::Reader->new(handle=>$fh) } "empty section -> dies";
+}
+
+{
+    my ($fh, $filename) = tempfile();
+    print $fh "Header\n";
+    close $fh; open $fh, "<", $filename;
+    dies_ok { Data::Section::Seekable::Reader->new(handle=>$fh) } "invalid header -> dies";
+}
+
+{
+    my ($fh, $filename) = tempfile();
+    print $fh "Data::Section::Seekable v1\n";
+    close $fh; open $fh, "<", $filename;
+    dies_ok { Data::Section::Seekable::Reader->new(handle=>$fh) } "empty toc -> dies";
+}
+
+{
+    my ($fh, $filename) = tempfile();
+    print $fh "Data::Section::Seekable v1\nfoo\n";
+    close $fh; open $fh, "<", $filename;
+    dies_ok { Data::Section::Seekable::Reader->new(handle=>$fh) } "invalid toc -> dies";
+}
+
+{
+    my ($fh, $filename) = tempfile();
+    print $fh "Data::Section::Seekable v1\nfoo,0,10\n";
+    close $fh; open $fh, "<", $filename;
+    dies_ok { Data::Section::Seekable::Reader->new(handle=>$fh) } "no blank line after toc -> dies";
+}
 
 done_testing;
 

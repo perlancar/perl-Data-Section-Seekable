@@ -14,6 +14,9 @@ use Data::Section::Seekable::Writer;
     $writer->add_part(part1 => "This is part1\n");
     $writer->add_part(part2 => "This is part\ntwo\n");
 
+    dies_ok { $writer->add_part('' => "foo") } "part name must not be empty";
+    dies_ok { $writer->add_part('a,b' => "foo") } "part name must not contain comma";
+
     is($writer->as_string, <<'_');
 Data::Section::Seekable v1
 part1,0,14
