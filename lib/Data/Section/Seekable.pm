@@ -21,6 +21,8 @@ content" part of the data section.
 
 =head1 FORMAT
 
+This document descries version 1 (v1) of the format.
+
 First line of data section is the header line and must be:
 
  Data::Section::Seekable v1
