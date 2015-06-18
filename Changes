@@ -1,5 +1,15 @@
 Revision history for Data-Section-Seekable
 
+0.06    2015-06-18 (PERLANCAR)
+
+        - [Incompatible change] Replace separator() with header() as the latter
+          makes more sense when adding multiple parts. header() can be a string
+          or a coderef.
+
+        - [ux] The default header() now prints "### name ###" so for normal
+          cases user does not change the default.
+
+
 0.05    2015-06-12 (PERLANCAR)
 
 	- No functional changes.
