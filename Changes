@@ -6,7 +6,7 @@ Revision history for Data-Section-Seekable
           makes more sense when adding multiple parts. header() can be a string
           or a coderef.
 
-        - [ux] The default header() now prints "### name ###" so for normal
+        - [ux] The default header() now prints "### <name> ###" so for normal
           cases user does not change the default.
 
 
