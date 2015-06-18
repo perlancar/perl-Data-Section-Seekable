@@ -16,7 +16,10 @@ sub new {
 
     my $self = bless {@_}, $class;
     $self->empty;
-    $self->{separator} //= '';
+    $self->{header} //= sub {
+        my ($self, $name, $content, $extra) = @_;
+        "### $name ###\n";
+    };
     $self;
 }
 
@@ -27,10 +30,10 @@ sub empty {
     $self->{_part_names} = {};
 }
 
-sub separator {
+sub header {
     my $self = shift;
-    $self->{separator} = $_[0] if @_;
-    $self->{separator};
+    $self->{header} = $_[0] if @_;
+    $self->{header};
 }
 
 sub add_part {
@@ -41,9 +44,14 @@ sub add_part {
 
     die "Duplicate part name '$name'" if $self->{_part_names}{$name}++;
 
-    if (keys(%{$self->{_part_names}}) > 1 && length($self->{separator})) {
-        $self->{_content} .= $self->{separator};
+    my $header;
+    if (ref($self->{header}) eq 'CODE') {
+        $header = $self->{header}->($self, $name, $content, $extra);
+    } else {
+        $header = $self->{header};
     }
+    $self->{_content} .= $header if defined($header);
+
     push @{ $self->{_toc} }, [
         $name,
         length($self->{_content}),
@@ -109,7 +117,16 @@ Constructor. Attributes:
 
 =over
 
-=item * separator => str (default: '')
+=item * header => str|code (default: code to list filename)
+
+Header string (or code which should return a string) to add before each part's
+content. The default is to print:
+
+ ### <name> ###
+
+Code will get these arguments:
+
+ ($writer, $name, $content, $extra)
 
 =back
 
@@ -124,9 +141,9 @@ e.g.:
 
 because this method is used for stringification overloading.
 
-=head2 $writer->separator([ $val ]) => str
+=head2 $writer->header([ $str_or_code ]) => value
 
-Get/set separator.
+Get/set header attribute.
 
 =head2 $writer->empty
 

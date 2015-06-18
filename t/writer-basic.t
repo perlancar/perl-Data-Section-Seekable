@@ -19,22 +19,27 @@ use Data::Section::Seekable::Writer;
 
     is($writer->as_string, <<'_');
 Data::Section::Seekable v1
-part1,0,14
-part2,14,17
+part1,14,14
+part2,42,17
 
+### part1 ###
 This is part1
+### part2 ###
 This is part
 two
 _
 }
 
+# test header, duplicate name, invalid part name & extra
 {
-    my $writer = Data::Section::Seekable::Writer->new(separator=>"==\n");
-    is($writer->separator, "==\n", "separator 1");
+    my $writer = Data::Section::Seekable::Writer->new(header=>"");
+    is($writer->header, "", "header string 1");
     $writer->add_part(b => "This is part1\n");
+    $writer->header("###\n");
+    is($writer->header, "###\n", "header string 2");
     $writer->add_part(a => "This is part\ntwo\n", "extra");
-    $writer->separator(">>\n");
-    is($writer->separator, ">>\n", "separator 2");
+    $writer->header(sub {"#\n"});
+    is(ref($writer->header), "CODE", "header code 1");
     $writer->add_part(c => "");
     dies_ok { $writer->add_part("c" => "") } "add duplicate name -> dies";
     dies_ok { $writer->add_part("d\n" => "") } "part name cannot contain newline";
@@ -43,14 +48,14 @@ _
     is($writer->as_string, <<'_');
 Data::Section::Seekable v1
 b,0,14
-a,17,17,extra
+a,18,17,extra
 c,37,0
 
 This is part1
-==
+###
 This is part
 two
->>
+#
 _
 }
 
