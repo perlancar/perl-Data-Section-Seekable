@@ -1,5 +1,10 @@
 Revision history for Data-Section-Seekable
 
+0.07    2015-10-21 (PERLANCAR)
+
+	- Allow header line to not be the first line of data section.
+
+
 0.06    2015-06-18 (PERLANCAR)
 
         - [Incompatible change] Replace separator() with header() as the latter
