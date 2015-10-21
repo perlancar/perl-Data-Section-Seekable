@@ -22,12 +22,20 @@ sub new {
 
 # BEGIN_BLOCK: read_dss_toc
 
-        my $header_line = <$fh>;
-        defined($header_line)
-            or die "Unexpected end of data section while reading header line";
-        chomp($header_line);
-        $header_line eq 'Data::Section::Seekable v1'
-            or die "Invalid header, must be 'Data::Section::Seekable v1' (got: $header_line)";
+        my $header_line;
+        my $header_found;
+        while (1) {
+            my $header_line = <$fh>;
+            defined($header_line)
+                or die "Unexpected end of data section while reading header line";
+            chomp($header_line);
+            if ($header_line eq 'Data::Section::Seekable v1') {
+                $header_found++;
+                last;
+            }
+        }
+        die "Can't find header 'Data::Section::Seekable v1'"
+            unless $header_found;
 
         my %toc;
         my $i = 0;

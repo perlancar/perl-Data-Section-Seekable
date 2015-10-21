@@ -30,6 +30,14 @@ is_deeply([$reader->parts()], ["part1","part2"], "parts()");
     is($reader->read_part('foo'), 'x');
 }
 
+subtest "ignore garbage before" => sub {
+    my ($fh, $filename) = tempfile();
+    print $fh "garbage\nanother garbage\n\nData::Section::Seekable v1\nfoo,0,1\n\nx";
+    close $fh; open $fh, "<", $filename;
+    my $reader = Data::Section::Seekable::Reader->new(handle=>$fh);
+    is($reader->read_part('foo'), 'x');
+};
+
 {
     my ($fh, $filename) = tempfile();
     close $fh; open $fh, "<", $filename;
@@ -40,7 +48,7 @@ is_deeply([$reader->parts()], ["part1","part2"], "parts()");
     my ($fh, $filename) = tempfile();
     print $fh "Header\n";
     close $fh; open $fh, "<", $filename;
-    dies_ok { Data::Section::Seekable::Reader->new(handle=>$fh) } "invalid header -> dies";
+    dies_ok { Data::Section::Seekable::Reader->new(handle=>$fh) } "no header found -> dies";
 }
 
 {
