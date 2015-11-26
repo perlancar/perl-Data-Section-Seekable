@@ -22,6 +22,15 @@ dies_ok { $reader->read_extra('part3') } "attempt to read extra for unknown part
 
 is_deeply([$reader->parts()], ["part1","part2"], "parts()");
 
+# test empty/no parts
+{
+    my ($fh, $filename) = tempfile();
+    print $fh "Data::Section::Seekable v1\n\n";
+    close $fh; open $fh, "<", $filename;
+    my $reader = Data::Section::Seekable::Reader->new(handle=>$fh);
+    is_deeply([$reader->parts], []);
+}
+
 {
     my ($fh, $filename) = tempfile();
     print $fh "Data::Section::Seekable v1\nfoo,0,1\n\nx";

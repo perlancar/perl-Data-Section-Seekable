@@ -64,8 +64,6 @@ sub add_part {
 sub as_string {
     my $self = shift;
 
-    die "You must first add one or more parts" unless @{ $self->{_toc} };
-
     join(
         "",
         "Data::Section::Seekable v1\n",

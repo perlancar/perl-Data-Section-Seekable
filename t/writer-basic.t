@@ -9,6 +9,15 @@ use Test::More 0.98;
 
 use Data::Section::Seekable::Writer;
 
+# test empty is okay
+{
+    my $writer = Data::Section::Seekable::Writer->new;
+    is($writer->as_string, <<'_');
+Data::Section::Seekable v1
+
+_
+}
+
 {
     my $writer = Data::Section::Seekable::Writer->new;
     $writer->add_part(part1 => "This is part1\n");
