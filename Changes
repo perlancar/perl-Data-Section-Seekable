@@ -1,5 +1,12 @@
 Revision history for Data-Section-Seekable
 
+0.09    2016-02-19 (PERLANCAR)
+
+	- No functional changes.
+
+	- Add test: binary.
+
+
 0.08    2015-11-27 (PERLANCAR)
 
 	- Allow writing DSS with no parts.
