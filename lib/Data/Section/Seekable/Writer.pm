@@ -1,8 +1,5 @@
 package Data::Section::Seekable::Writer;
 
-# DATE
-# VERSION
-
 use 5.010001;
 use strict;
 use warnings;
@@ -10,6 +7,11 @@ use warnings;
 use overload
     '""'  => 'as_string',
     ;
+
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
 
 sub new {
     my $class = shift;
@@ -146,6 +148,12 @@ Get/set header attribute.
 =head2 $writer->empty
 
 Empty content.
+
+
+=head2 Why am I getting the error message "readline() on unopened filehandle DATA at ..."?
+
+You are probably writing in the BEGIN phase, at which point the DATA filehandle
+is not available. Read L<perldata> for more details.
 
 
 =head1 SEE ALSO

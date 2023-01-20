@@ -1,11 +1,13 @@
 package Data::Section::Seekable::Reader;
 
-# DATE
-# VERSION
-
 use 5.010001;
 use strict;
 use warnings;
+
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
 
 sub new {
     no strict 'refs';
@@ -153,6 +155,14 @@ Read the content of a part named C<$name>. Will die if part is unknown.
 
 Read the extra information field (the fourth field of TOC line) of a part named
 C<$name>. Will die if part is unknown.
+
+
+=head1 FAQ
+
+=head2 Why am I getting the error message "readline() on unopened filehandle DATA at ..."?
+
+You are probably reading in the BEGIN phase, at which point the DATA filehandle
+is not available. Read L<perldata> for more details.
 
 
 =head1 SEE ALSO
