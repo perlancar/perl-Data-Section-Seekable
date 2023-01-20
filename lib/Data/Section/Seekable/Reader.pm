@@ -10,7 +10,7 @@ use warnings;
 # VERSION
 
 sub new {
-    no strict 'refs';
+    no strict 'refs'; ## no critic: TestingAndDebugging::ProhibitNoStrict
 
     my $class = shift;
 

@@ -1,6 +1,10 @@
 package Data::Section::Seekable;
 
+use strict;
+
+# AUTHORITY
 # DATE
+# DIST
 # VERSION
 
 1;

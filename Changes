@@ -1,3 +1,10 @@
+0.091   2023-01-20  Released-By: PERLANCAR; Urgency: low
+
+        - No functional changes.
+
+        - [doc] Add FAQ item about 'unopened filehandle DATA'.
+
+
 0.09    2016-02-19  Released-By: PERLANCAR
 
 	- No functional changes.
