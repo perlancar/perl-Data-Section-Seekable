@@ -2,3 +2,4 @@ Data-Section-Seekable-*
 .build
 *~
 nytprof*
+.DS_Store
