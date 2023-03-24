@@ -31,8 +31,8 @@ First line of data section is the header line and must be:
 
  Data::Section::Seekable v1
 
-Actually, the header line need not be the first line of data. Previous lines not
-matching the header line will be ignored (so you can put other stuffs here).
+Actually, the header line needs not be the first line of data. Previous lines
+not matching the header line will be ignored (so you can put other stuffs here).
 
 After the header line, comes zero or more TOC ("table of content") lines. Each
 TOC line must match this Perl regex:
